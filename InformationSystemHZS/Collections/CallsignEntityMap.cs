@@ -1,4 +1,4 @@
-﻿using InformationSystemHZS.Utils;
+﻿using System.Text.RegularExpressions;
 
 namespace InformationSystemHZS.Collections;
 
@@ -6,16 +6,18 @@ namespace InformationSystemHZS.Collections;
 /// Stores and manages data that maps valid callsigns to entities of a given type. 
 /// </summary>
 /// <typeparam name="T">IBaseModel</typeparam>
-public class CallsignEntityMap<T>
+public partial class CallsignEntityMap<T>
 {
     // TODO: Implement data storage
     private readonly Dictionary<string, T> _data = new ();
     private char callsignLetter { get; }
-    
+    private Regex CallsignRegex { get; }
+
     // TODO: Maybe a constructor might come in handy, ey?
     public CallsignEntityMap(char letter)
     {
-        callsignLetter = letter;
+        callsignLetter = char.ToUpper(letter);
+        CallsignRegex = new Regex("^" + char.ToUpper(letter) + @"([0-9][1-9]|[1-9][0-9])$");
     }
 
     /// <summary>
@@ -58,14 +60,25 @@ public class CallsignEntityMap<T>
     {
         // TODO: Implement
         // throw new NotImplementedException();
-
-        if (callsign == null)
+        if (callsign != null && (_data.ContainsKey(callsign) || !ValidateCallsign(callsign))) { return false; }
+        
+        var highestCallsign = GetHighestCallsign();
+        if (highestCallsign == null)
         {
-            
+            _data.TryAdd(callsignLetter + "01", entity);
+            return true;
         }
         
-        if (!_data.ContainsKey(callsign))
-        return callsign != null && _data.TryAdd(callsign, entity);
+        var highestCallsignNumber = GetCallsignNumber(highestCallsign);
+
+        if (highestCallsignNumber == null) { return false; }
+        
+        var callsignNumber = highestCallsignNumber + 1 > 9
+            ? $"{ highestCallsign + 1 }"
+            : $"0{ highestCallsign + 1 }";
+        
+        _data.TryAdd(callsignLetter + callsignNumber, entity);
+        return true;
     }
 
     /// <summary>
@@ -88,8 +101,28 @@ public class CallsignEntityMap<T>
         return [.._data.Keys];
     }
 
-    public int? GetHighestCallsign()
+    public string? GetHighestCallsign()
     {
-        string maxKey = _data.Keys.OrderByDescending(key => CallsignUtil.GetCallsignNumber(callsign))).First();
+        var existingCallsigns = _data.Keys.ToList();
+        return existingCallsigns.OrderByDescending(GetCallsignNumber).First();
+    }
+
+    public bool ValidateCallsign(string? callsign)
+    {
+        if (callsign == null) { return false; }
+        
+        var isMatch = CallsignRegex.IsMatch(callsign);
+        
+        return isMatch;
+    }
+
+    public int? GetCallsignNumber(string callsign)
+    {
+        if (!ValidateCallsign(callsign)) { return null; }
+        
+        var numericPart = callsign[^2..];
+        if (!int.TryParse(numericPart, out var num)) { return null; }
+
+        return num;
     }
 }
