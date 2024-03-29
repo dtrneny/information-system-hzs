@@ -1,4 +1,6 @@
-﻿namespace InformationSystemHZS.Collections;
+﻿using InformationSystemHZS.Utils;
+
+namespace InformationSystemHZS.Collections;
 
 /// <summary>
 /// Stores and manages data that maps valid callsigns to entities of a given type. 
@@ -7,8 +9,14 @@
 public class CallsignEntityMap<T>
 {
     // TODO: Implement data storage
+    private readonly Dictionary<string, T> _data = new ();
+    private char callsignLetter { get; }
     
     // TODO: Maybe a constructor might come in handy, ey?
+    public CallsignEntityMap(char letter)
+    {
+        callsignLetter = letter;
+    }
 
     /// <summary>
     /// Returns an entity based on the given callsign.
@@ -17,7 +25,8 @@ public class CallsignEntityMap<T>
     public T? GetEntity(string callsign)
     {
         // TODO: Implement
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
+        return _data[callsign] ?? default(T);
     }
 
     /// <summary>
@@ -26,7 +35,8 @@ public class CallsignEntityMap<T>
     public List<T> GetAllEntities()
     {
         // TODO: Implement
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
+        return _data.Values.ToList();
     }
     
     /// <summary>
@@ -35,7 +45,8 @@ public class CallsignEntityMap<T>
     public int GetEntitiesCount()
     {
         // TODO: Implement
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
+        return _data.Values.Count;
     }
     
     /// <summary>
@@ -46,7 +57,15 @@ public class CallsignEntityMap<T>
     public bool SafelyAddEntity(T entity, string? callsign)
     {
         // TODO: Implement
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
+
+        if (callsign == null)
+        {
+            
+        }
+        
+        if (!_data.ContainsKey(callsign))
+        return callsign != null && _data.TryAdd(callsign, entity);
     }
 
     /// <summary>
@@ -56,6 +75,21 @@ public class CallsignEntityMap<T>
     public bool SafelyRemoveEntity(string callsign)
     {
         // TODO: Implement
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
+        return _data.Remove(callsign);
+    }
+    
+    /// <summary>
+    /// Function which returns list of callsigns from map.
+    /// </summary>
+    /// <returns>List of callsigns</returns>
+    public List<string> GetAllCallsigns()
+    {
+        return [.._data.Keys];
+    }
+
+    public int? GetHighestCallsign()
+    {
+        string maxKey = _data.Keys.OrderByDescending(key => CallsignUtil.GetCallsignNumber(callsign))).First();
     }
 }
