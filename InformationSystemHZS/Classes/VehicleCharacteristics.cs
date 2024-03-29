@@ -1,3 +1,4 @@
+using InformationSystemHZS.Exceptions;
 using InformationSystemHZS.Utils.Enums;
 
 namespace InformationSystemHZS.Classes;
@@ -12,6 +13,6 @@ public class VehicleCharacteristics(VehicleType type)
         VehicleType.ANTI_GAS_VEHICLE => [IncidentType.HAZARD],
         VehicleType.RESCUE_VEHICLE => [IncidentType.ACCIDENT, IncidentType.RESCUE],
         VehicleType.CRANE_TRUCK => [IncidentType.TECHNICAL, IncidentType.RESCUE],
-        _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        _ => throw new UnknownEnumCaseException(type.ToString())
     };
 }

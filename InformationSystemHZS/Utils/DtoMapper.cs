@@ -1,4 +1,5 @@
 using InformationSystemHZS.Classes;
+using InformationSystemHZS.Exceptions;
 using InformationSystemHZS.Models;
 using InformationSystemHZS.Models.HelperModels;
 using InformationSystemHZS.Utils.Enums;
@@ -12,11 +13,7 @@ public static class DtoMapper
         
         var memberRank = EnumParser.ParseEnumValueFromString<MemberRank>(dto.Rank);
 
-        if (memberRank == null)
-        {
-            // TODO: custom exception
-            throw new Exception();
-        }
+        if (memberRank == null) { throw new NullEnumMappingException(dto.Rank); }
         
         return new Member(
             dto.Callsign,
@@ -35,11 +32,7 @@ public static class DtoMapper
     {
         var incidentType = EnumParser.ParseEnumValueFromString<IncidentType>(dto.Type);
 
-        if (incidentType == null)
-        {
-            // TODO: custom exception
-            throw new Exception();
-        }
+        if (incidentType == null) { throw new NullEnumMappingException(dto.Type); }
         
         var incidentCharacteristics = new IncidentCharacteristics((IncidentType) incidentType);
         
@@ -57,11 +50,7 @@ public static class DtoMapper
     {
         var vehicleType = EnumParser.ParseEnumValueFromString<VehicleType>(dto.Type);
 
-        if (vehicleType == null)
-        {
-            // TODO: custom exception
-            throw new Exception();
-        }
+        if (vehicleType == null) { throw new NullEnumMappingException(dto.Type); }
         
         var vehicleCharacteristics = new VehicleCharacteristics((VehicleType) vehicleType);
         
@@ -80,11 +69,7 @@ public static class DtoMapper
         
         var unitState = EnumParser.ParseEnumValueFromString<UnitState>(dto.State);
 
-        if (unitState == null)
-        {
-            // TODO: custom exception
-            throw new Exception();
-        }
+        if (unitState == null) { throw new NullEnumMappingException(dto.State); }
         
         return new Unit(
             dto.Callsign,

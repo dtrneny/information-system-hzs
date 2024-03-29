@@ -1,3 +1,4 @@
+using InformationSystemHZS.Exceptions;
 using InformationSystemHZS.Utils.Enums;
 
 namespace InformationSystemHZS.Classes;
@@ -13,6 +14,6 @@ public class IncidentCharacteristics(IncidentType type)
         IncidentType.HAZARD => 10,
         IncidentType.TECHNICAL => 4,
         IncidentType.RESCUE => 6,
-        _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        _ => throw new UnknownEnumCaseException(type.ToString())
     };
 }
