@@ -74,8 +74,8 @@ public partial class CallsignEntityMap<T>
         if (highestCallsignNumber == null) { return false; }
         
         var callsignNumber = highestCallsignNumber + 1 > 9
-            ? $"{ highestCallsign + 1 }"
-            : $"0{ highestCallsign + 1 }";
+            ? $"{ highestCallsignNumber + 1 }"
+            : $"0{ highestCallsignNumber + 1 }";
         
         _data.TryAdd(callsignLetter + callsignNumber, entity);
         return true;
@@ -104,16 +104,12 @@ public partial class CallsignEntityMap<T>
     public string? GetHighestCallsign()
     {
         var existingCallsigns = _data.Keys.ToList();
-        return existingCallsigns.OrderByDescending(GetCallsignNumber).First();
+        return existingCallsigns.Count != 0 ? existingCallsigns.OrderByDescending(GetCallsignNumber).First() : null;
     }
 
     public bool ValidateCallsign(string? callsign)
     {
-        if (callsign == null) { return false; }
-        
-        var isMatch = CallsignRegex.IsMatch(callsign);
-        
-        return isMatch;
+        return callsign != null && CallsignRegex.IsMatch(callsign);
     }
 
     public int? GetCallsignNumber(string callsign)

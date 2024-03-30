@@ -14,6 +14,6 @@ public class IncidentCharacteristics(IncidentType type)
         IncidentType.HAZARD => 10,
         IncidentType.TECHNICAL => 4,
         IncidentType.RESCUE => 6,
-        _ => throw new UnknownEnumCaseException(type.ToString())
+        _ => throw new UnknownEnumCaseException(true, type.ToString())
     };
 }

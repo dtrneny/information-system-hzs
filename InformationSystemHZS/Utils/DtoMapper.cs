@@ -1,4 +1,5 @@
 using InformationSystemHZS.Classes;
+using InformationSystemHZS.Collections;
 using InformationSystemHZS.Exceptions;
 using InformationSystemHZS.Models;
 using InformationSystemHZS.Models.HelperModels;
@@ -13,7 +14,7 @@ public static class DtoMapper
         
         var memberRank = EnumParser.ParseEnumValueFromString<MemberRank>(dto.Rank);
 
-        if (memberRank == null) { throw new NullEnumMappingException(dto.Rank); }
+        if (memberRank == null) { throw new NullEnumMappingException(true, dto.Rank); }
         
         return new Member(
             dto.Callsign,
@@ -32,7 +33,7 @@ public static class DtoMapper
     {
         var incidentType = EnumParser.ParseEnumValueFromString<IncidentType>(dto.Type);
 
-        if (incidentType == null) { throw new NullEnumMappingException(dto.Type); }
+        if (incidentType == null) { throw new NullEnumMappingException(true, dto.Type); }
         
         var incidentCharacteristics = new IncidentCharacteristics((IncidentType) incidentType);
         
@@ -50,7 +51,7 @@ public static class DtoMapper
     {
         var vehicleType = EnumParser.ParseEnumValueFromString<VehicleType>(dto.Type);
 
-        if (vehicleType == null) { throw new NullEnumMappingException(dto.Type); }
+        if (vehicleType == null) { throw new NullEnumMappingException(true, dto.Type); }
         
         var vehicleCharacteristics = new VehicleCharacteristics((VehicleType) vehicleType);
         
@@ -65,16 +66,17 @@ public static class DtoMapper
     
     public static Unit MapUnitDtoToUnit(UnitDto dto)
     {
-        var members = dto.Members.Select(MapMemberDtoToMember).ToList();
-        
-        var unitState = EnumParser.ParseEnumValueFromString<UnitState>(dto.State);
+        var members = new CallsignEntityMap<Member>('H');
 
-        if (unitState == null) { throw new NullEnumMappingException(dto.State); }
+        foreach (var member in dto.Members.Select(MapMemberDtoToMember))
+        {
+            members.SafelyAddEntity(member, member.Callsign);
+        }
         
         return new Unit(
             dto.Callsign,
             dto.StationCallsign,
-            (UnitState) unitState,
+            UnitState.AVAILABLE,
             MapVehicleDtoToVehicle(dto.VehicleDto),
             members
         );
@@ -82,7 +84,12 @@ public static class DtoMapper
     
     public static Station MapStationDtoToStation(StationDto dto)
     {
-        var units = dto.Units.Select(MapUnitDtoToUnit).ToList();
+        var units = new CallsignEntityMap<Unit>('J');
+
+        foreach (var unit in dto.Units.Select(MapUnitDtoToUnit))
+        {
+            units.SafelyAddEntity(unit, unit.Callsign);
+        }
         
         return new Station(
             dto.Callsign,
@@ -94,9 +101,14 @@ public static class DtoMapper
     
     public static ScenarioObject MapScenarionObjectDtoToScenarioObject(ScenarioObjectDto dto)
     {
-        var stations = dto.Stations.Select(MapStationDtoToStation).ToList();
         var recordedIncidents = dto.IncidentsHistory.Select(MapRecordedIncidentDtoToRecordedIncident).ToList();
-        
+        var stations = new CallsignEntityMap<Station>('S');
+
+        foreach (var station in dto.Stations.Select(MapStationDtoToStation))
+        {
+            stations.SafelyAddEntity(station, station.Callsign);
+        }
+
         return new ScenarioObject(stations, recordedIncidents);
     } 
 }

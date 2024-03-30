@@ -13,6 +13,6 @@ public class VehicleCharacteristics(VehicleType type)
         VehicleType.ANTI_GAS_VEHICLE => [IncidentType.HAZARD],
         VehicleType.RESCUE_VEHICLE => [IncidentType.ACCIDENT, IncidentType.RESCUE],
         VehicleType.CRANE_TRUCK => [IncidentType.TECHNICAL, IncidentType.RESCUE],
-        _ => throw new UnknownEnumCaseException(type.ToString())
+        _ => throw new UnknownEnumCaseException(true, type.ToString())
     };
 }

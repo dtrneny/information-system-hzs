@@ -1,6 +1,8 @@
 using InformationSystemHZS.Exceptions;
 using InformationSystemHZS.IO;
 using InformationSystemHZS.IO.Helpers.Interfaces;
+using InformationSystemHZS.Models;
+using InformationSystemHZS.Models.HelperModels;
 using InformationSystemHZS.Services;
 using InformationSystemHZS.Utils;
 using Timer = System.Timers.Timer;
@@ -21,21 +23,12 @@ public class Runner
 
         // Load initial data from JSON
         // TODO: Catch exception here in case the loading failed, write an error message containing "import" and return "Task.CompletedTask" 
+
+        ScenarioObjectDto? data;
+        
         try
         {
-            var data = ScenarioLoader.GetInitialScenarioData(entryFileName);
-
-            if (data == null)
-            {
-                throw new NullScenarioObjectException();
-            }
-
-            var scenario = DtoMapper.MapScenarionObjectDtoToScenarioObject(data);
-        }
-        catch (BaseException e)
-        {
-            Console.WriteLine(e.Message);
-            return Task.CompletedTask;
+            data = ScenarioLoader.GetInitialScenarioData(entryFileName);
         }
         catch (Exception e)
         {
@@ -45,9 +38,35 @@ public class Runner
         
         // TODO: After we obtain valid data from ScenarioLoader, it is necessary to instantiate your own objects here.
         // TODO: We also need to check that given data is in a valid form (unique IDs, valid no. of firefighters, valid vehicle type).
-        while (true) 
+        ScenarioObject? scenario = null;
+
+        try
         {
-            // TODO: Implement main loop handling of user input.
+            if (data == null)
+            {
+                throw new NullScenarioDataException(true);
+            }
+            
+            scenario = DtoMapper.MapScenarionObjectDtoToScenarioObject(data);
+            
+            if (scenario == null)
+            {
+                throw new NullScenarioObjectException(true);
+            }
+            
+            ScenarioValidation.ValidateScenarioObject(scenario);
+        }
+        catch (BaseException e)
+        {
+            Console.WriteLine(e.Message);
+            if (e.Terminating) { return Task.CompletedTask; }
+        }
+        
+        if (scenario == null) { return Task.CompletedTask; }
+        
+        while (true)
+        {
+            
         }
     }
 

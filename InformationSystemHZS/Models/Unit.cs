@@ -1,3 +1,4 @@
+using InformationSystemHZS.Collections;
 using InformationSystemHZS.Models.Interfaces;
 using InformationSystemHZS.Utils.Enums;
 
@@ -8,12 +9,12 @@ public class Unit(
     string stationCallsign,
     UnitState state,
     Vehicle vehicleDto,
-    List<Member> members
+    CallsignEntityMap<Member> members
 ): IBaseModel
 {
     public string Callsign { get; set; } = callsign;
     public string StationCallsign { get; set; } = stationCallsign;
     public UnitState State { get; set; } = state;
-    public Vehicle VehicleDto { get; set; } = vehicleDto;
-    public List<Member> Members { get; set; } = members;
+    public Vehicle Vehicle { get; set; } = vehicleDto;
+    public CallsignEntityMap<Member> Members { get; set; } = members;
 }
