@@ -1,7 +1,6 @@
 namespace InformationSystemHZS.Exceptions;
 
-public class EmptyUnitException(bool terminating): BaseException
+public class EmptyUnitException: BaseException
 {
-    public override string Message => "Fire unit cannot be empty.";
-    public override bool Terminating => terminating;
+    public override string Message => "[capacity]: Unit cannot be empty.";
 }

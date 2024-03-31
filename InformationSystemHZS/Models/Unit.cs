@@ -17,4 +17,9 @@ public class Unit(
     public UnitState State { get; set; } = state;
     public Vehicle Vehicle { get; set; } = vehicleDto;
     public CallsignEntityMap<Member> Members { get; set; } = members;
+    
+    public override string ToString()
+    {
+        return $"{StationCallsign} | {Callsign} | {Vehicle.Name} | {Members.GetEntitiesCount()}/{Vehicle.Capacity} | {State}";
+    }
 }

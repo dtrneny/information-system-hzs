@@ -14,4 +14,9 @@ public class Station(
     public Position Position { get; set; } = positionDto;
     public string Name { get; set; } = name;
     public CallsignEntityMap<Unit> Units { get; set; } = units;
+
+    public override string ToString()
+    {
+        return $"{Callsign} | {Name} | {Units.GetEntitiesCount()} | ({Position.X}, {Position.Y})";
+    }
 }

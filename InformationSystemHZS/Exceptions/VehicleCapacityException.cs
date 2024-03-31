@@ -1,7 +1,6 @@
 namespace InformationSystemHZS.Exceptions;
 
-public class VehicleCapacityException(bool terminating): BaseException
+public class VehicleCapacityException: BaseException
 {
-    public override string Message => "Vehicle capacity was exceeded.";
-    public override bool Terminating => terminating;
+    public override string Message => "[capacity]: Vehicle capacity was exceeded.";
 }

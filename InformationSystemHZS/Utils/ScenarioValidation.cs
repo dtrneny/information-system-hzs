@@ -1,6 +1,7 @@
 using InformationSystemHZS.Collections;
 using InformationSystemHZS.Exceptions;
 using InformationSystemHZS.Models;
+using InformationSystemHZS.Utils.Enums;
 
 namespace InformationSystemHZS.Utils;
 
@@ -16,6 +17,12 @@ public static class ScenarioValidation
     private static bool ValidateVehicleCapacity(int capacity, int membersCount)
     {
         return capacity >= membersCount;
+    }
+
+    private static bool ValidateVehicleType(string vehicleType)
+    {
+        var type = ValueParser.ParseEnumValueFromString<VehicleType>(vehicleType);
+        return type != null;
     }
 
     private static bool ValidateUnitMembersCount(int membersCount)
@@ -35,17 +42,23 @@ public static class ScenarioValidation
     {
         if (!ValidateDuplicateIdentifiers(unit.Members.GetAllCallsigns()))
         {
-            throw new DuplicateIdentifierException(true);
+            throw new DuplicateIdentifierException();
         }
 
         if (!ValidateUnitMembersCount(unit.Members.GetEntitiesCount()))
         {
-            throw new EmptyUnitException(true);
+            throw new EmptyUnitException();
         }
         
         if (!ValidateVehicleCapacity(unit.Vehicle.Capacity, unit.Members.GetEntitiesCount()))
         {
-            throw new VehicleCapacityException(true);
+            throw new VehicleCapacityException();
+        }
+
+        var vehicleType = unit.Vehicle.Characteristics.Type.ToString();
+        if (!ValidateVehicleType(vehicleType))
+        {
+            throw new InvalidVehicleTypeException(vehicleType);
         }
     }
 
@@ -53,12 +66,12 @@ public static class ScenarioValidation
     {
         if (!ValidatePositionInBounds(station.Position))
         {
-            throw new PositionOutOfBoundsException(true, station.Position);
+            throw new PositionOutOfBoundsException(station.Position);
         }
         
         if (!ValidateDuplicateIdentifiers(station.Units.GetAllCallsigns()))
         {
-            throw new DuplicateIdentifierException(true);
+            throw new DuplicateIdentifierException();
         }
         
         foreach (var unit in station.Units.GetAllEntities())
@@ -71,7 +84,7 @@ public static class ScenarioValidation
     {
         if (!ValidateDuplicateIdentifiers(stations.GetAllCallsigns()))
         {
-            throw new DuplicateIdentifierException(true);
+            throw new DuplicateIdentifierException();
         }
 
         foreach (var station in stations.GetAllEntities())
@@ -86,7 +99,7 @@ public static class ScenarioValidation
         {
             if (!ValidatePositionInBounds(incident.Location))
             {
-                throw new PositionOutOfBoundsException(true, incident.Location);
+                throw new PositionOutOfBoundsException(incident.Location);
             }
         }
     }

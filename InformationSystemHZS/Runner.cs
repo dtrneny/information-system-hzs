@@ -23,50 +23,44 @@ public class Runner
 
         // Load initial data from JSON
         // TODO: Catch exception here in case the loading failed, write an error message containing "import" and return "Task.CompletedTask" 
-
-        ScenarioObjectDto? data;
-        
-        try
-        {
-            data = ScenarioLoader.GetInitialScenarioData(entryFileName);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error during import: {e.Message}");
-            return Task.CompletedTask;
-        }
-        
         // TODO: After we obtain valid data from ScenarioLoader, it is necessary to instantiate your own objects here.
         // TODO: We also need to check that given data is in a valid form (unique IDs, valid no. of firefighters, valid vehicle type).
-        ScenarioObject? scenario = null;
+        ScenarioObject scenario;
 
         try
         {
+            var data = ScenarioLoader.GetInitialScenarioData(entryFileName);
+
             if (data == null)
             {
-                throw new NullScenarioDataException(true);
+                throw new NullScenarioDataException();
             }
             
             scenario = DtoMapper.MapScenarionObjectDtoToScenarioObject(data);
             
             if (scenario == null)
             {
-                throw new NullScenarioObjectException(true);
+                throw new NullScenarioObjectException();
             }
             
             ScenarioValidation.ValidateScenarioObject(scenario);
         }
         catch (BaseException e)
         {
-            Console.WriteLine(e.Message);
-            if (e.Terminating) { return Task.CompletedTask; }
+            outputWriter.PrintBaseExceptionMessage(e.Message);
+            return Task.CompletedTask;
+        }
+        catch (Exception e)
+        {
+            outputWriter.PrintImportErrorMessage(e.Message);
+            return Task.CompletedTask;
         }
         
-        if (scenario == null) { return Task.CompletedTask; }
-        
+        var context = new SystemContext(outputWriter, scenario);
         while (true)
         {
-            
+            var command = commandParser.GetCommand();
+            command?.Execute(context);
         }
     }
 

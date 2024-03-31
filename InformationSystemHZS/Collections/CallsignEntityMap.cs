@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using InformationSystemHZS.Models.Interfaces;
 
 namespace InformationSystemHZS.Collections;
 
@@ -6,17 +7,17 @@ namespace InformationSystemHZS.Collections;
 /// Stores and manages data that maps valid callsigns to entities of a given type. 
 /// </summary>
 /// <typeparam name="T">IBaseModel</typeparam>
-public partial class CallsignEntityMap<T>
+public partial class CallsignEntityMap<T> where T : IBaseModel
 {
     // TODO: Implement data storage
     private readonly Dictionary<string, T> _data = new ();
-    private char callsignLetter { get; }
+    private char CallsignLetter { get; }
     private Regex CallsignRegex { get; }
 
     // TODO: Maybe a constructor might come in handy, ey?
     public CallsignEntityMap(char letter)
     {
-        callsignLetter = char.ToUpper(letter);
+        CallsignLetter = char.ToUpper(letter);
         CallsignRegex = new Regex("^" + char.ToUpper(letter) + @"([0-9][1-9]|[1-9][0-9])$");
     }
 
@@ -28,7 +29,7 @@ public partial class CallsignEntityMap<T>
     {
         // TODO: Implement
         // throw new NotImplementedException();
-        return _data[callsign] ?? default(T);
+        return _data.TryGetValue(callsign, out var value) ? value : default(T);
     }
 
     /// <summary>
@@ -39,6 +40,13 @@ public partial class CallsignEntityMap<T>
         // TODO: Implement
         // throw new NotImplementedException();
         return _data.Values.ToList();
+    }
+
+    public List<T> GetAllEntitiesSorted(bool ascending = true)
+    {
+        return ascending
+            ? _data.Values.OrderBy(item => GetCallsignNumber(item.Callsign)).ToList()
+            : _data.Values.OrderByDescending(item => GetCallsignNumber(item.Callsign)).ToList();
     }
     
     /// <summary>
@@ -65,7 +73,7 @@ public partial class CallsignEntityMap<T>
         var highestCallsign = GetHighestCallsign();
         if (highestCallsign == null)
         {
-            _data.TryAdd(callsignLetter + "01", entity);
+            _data.TryAdd(CallsignLetter + "01", entity);
             return true;
         }
         
@@ -76,8 +84,9 @@ public partial class CallsignEntityMap<T>
         var callsignNumber = highestCallsignNumber + 1 > 9
             ? $"{ highestCallsignNumber + 1 }"
             : $"0{ highestCallsignNumber + 1 }";
-        
-        _data.TryAdd(callsignLetter + callsignNumber, entity);
+
+        entity.Callsign = CallsignLetter + callsignNumber;
+        _data.TryAdd(entity.Callsign, entity);
         return true;
     }
 
@@ -120,5 +129,10 @@ public partial class CallsignEntityMap<T>
         if (!int.TryParse(numericPart, out var num)) { return null; }
 
         return num;
+    }
+    
+    public bool ContainsCallsign(string callsign)
+    {
+        return _data.ContainsKey(callsign);
     }
 }

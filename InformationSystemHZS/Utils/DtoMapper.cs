@@ -12,9 +12,9 @@ public static class DtoMapper
     public static Member MapMemberDtoToMember(MemberDto dto)
     {
         
-        var memberRank = EnumParser.ParseEnumValueFromString<MemberRank>(dto.Rank);
+        var memberRank = ValueParser.ParseEnumValueFromString<MemberRank>(dto.Rank);
 
-        if (memberRank == null) { throw new NullEnumMappingException(true, dto.Rank); }
+        if (memberRank == null) { throw new NullEnumMappingException(dto.Rank); }
         
         return new Member(
             dto.Callsign,
@@ -31,9 +31,9 @@ public static class DtoMapper
     
     public static RecordedIncident MapRecordedIncidentDtoToRecordedIncident(RecordedIncidentDto dto)
     {
-        var incidentType = EnumParser.ParseEnumValueFromString<IncidentType>(dto.Type);
+        var incidentType = ValueParser.ParseEnumValueFromString<IncidentType>(dto.Type);
 
-        if (incidentType == null) { throw new NullEnumMappingException(true, dto.Type); }
+        if (incidentType == null) { throw new NullEnumMappingException(dto.Type); }
         
         var incidentCharacteristics = new IncidentCharacteristics((IncidentType) incidentType);
         
@@ -49,9 +49,9 @@ public static class DtoMapper
     
     public static Vehicle MapVehicleDtoToVehicle(VehicleDto dto)
     {
-        var vehicleType = EnumParser.ParseEnumValueFromString<VehicleType>(dto.Type);
+        var vehicleType = ValueParser.ParseEnumValueFromString<VehicleType>(dto.Type);
 
-        if (vehicleType == null) { throw new NullEnumMappingException(true, dto.Type); }
+        if (vehicleType == null) { throw new NullEnumMappingException(dto.Type); }
         
         var vehicleCharacteristics = new VehicleCharacteristics((VehicleType) vehicleType);
         

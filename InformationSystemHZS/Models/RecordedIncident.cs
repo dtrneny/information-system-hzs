@@ -8,7 +8,8 @@ public class RecordedIncident(
     string description,
     string incidentStartTIme,
     string assignedStation,
-    string assignedUnit
+    string assignedUnit,
+    bool resolved = false
 )
 {
     public IncidentCharacteristics Characteristics { get; set; } = characteristics;
@@ -17,4 +18,10 @@ public class RecordedIncident(
     public string IncidentStartTIme { get; set; } = incidentStartTIme;
     public string AssignedStation { get; set; } = assignedStation;
     public string AssignedUnit { get; set; } = assignedUnit;
+    public bool Resolved { get; set; } = resolved;
+    
+    public override string ToString()
+    {
+        return $"{Characteristics.Type} | ({Location.X}, {Location.Y}) | {IncidentStartTIme} | {Description} | {AssignedStation} | {AssignedUnit}";
+    }
 }
