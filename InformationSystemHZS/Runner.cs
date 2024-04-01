@@ -57,6 +57,8 @@ public class Runner
         }
         
         var context = new SystemContext(outputWriter, scenario);
+        commandParser.CommandGiven += Logger.OnInputGiven;
+        
         while (true)
         {
             var command = commandParser.GetCommand();

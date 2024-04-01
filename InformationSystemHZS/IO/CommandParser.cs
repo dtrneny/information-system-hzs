@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using InformationSystemHZS.Commands;
 using InformationSystemHZS.IO.Helpers.Interfaces;
+using InformationSystemHZS.Utils;
 
 namespace InformationSystemHZS.IO;
 
@@ -10,6 +11,7 @@ public partial class CommandParser
     
     [GeneratedRegex("""("[^"]*"|\S+)""")]
     private static partial Regex ArgumentRegex();
+    public event EventHandler<CommandLogEventArguments> CommandGiven;
     
     public CommandParser(IConsoleManager consoleManager)
     {
@@ -26,9 +28,12 @@ public partial class CommandParser
             return null;
         }
         
-        var tokens = ParseArguments(input);
-        var commandName = tokens.FirstOrDefault();
-        var commandArguments = tokens.Skip(1).ToList();
+        var cliValues = ArgumentRegex()
+            .Matches(input)
+            .Select(match => match.Value.Trim('"'))
+            .ToList();
+        var commandName = cliValues.FirstOrDefault();
+        var commandArguments = cliValues.Skip(1).ToList();
 
         if (commandName == null)
         {
@@ -38,15 +43,13 @@ public partial class CommandParser
         
         var command = CommandFactory.GetCommandByName(commandName, commandArguments);
 
-        if (command != null) return command;
+        if (command != null)
+        {
+            CommandGiven.Invoke(this, new CommandLogEventArguments(commandName, commandArguments));
+            return command;
+        }
         
         _consoleManager.WriteLine("[unknown]: Invalid or unknown command.");
         return null;
-    }
-    
-    private static List<string> ParseArguments(string input)
-    {
-        var matches = ArgumentRegex().Matches(input);
-        return matches.Select(match => match.Value.Trim('"')).ToList();
     }
 }

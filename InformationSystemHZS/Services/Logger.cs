@@ -1,20 +1,31 @@
+using InformationSystemHZS.Utils;
+
 namespace InformationSystemHZS.Services;
 
 public static class Logger
 {
-    public static void OnInputGiven(object sender, string command)
+    
+    private static readonly string RootProjectPath = Path.GetFullPath(@"..\..\..\");
+
+    public static void OnInputGiven(object? sender, CommandLogEventArguments e)
     {
+        var filePath = Path.Combine(RootProjectPath, "Logs/commandInputLog.txt");
+        
         try
         {
-            using (StreamWriter writer = new StreamWriter("log.txt", true))
-            {
-                writer.WriteLine(command);
-            }
+            using var writer = new StreamWriter(filePath, true);
+            writer.WriteLine(FormatLog(e));
         }
         catch (Exception ex)
         {
-            // Handle any exceptions, such as file access issues (this should not ever happen)
             Console.WriteLine($"Error writing to log file: {ex.Message}");
         }
+    }
+
+    private static string FormatLog(CommandLogEventArguments e)
+    {
+        return e.CommandArguments.Count > 0 
+            ?  $"{e.CommandName}: {string.Join(", ", e.CommandArguments)}"
+            : $"{e.CommandName}";
     }
 }
