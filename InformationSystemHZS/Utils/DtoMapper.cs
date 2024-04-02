@@ -43,7 +43,8 @@ public static class DtoMapper
             dto.Description, 
             dto.IncidentStartTIme,
             dto.AssignedStation,
-            dto.AssignedUnit
+            dto.AssignedUnit,
+            true
         );
     }
     

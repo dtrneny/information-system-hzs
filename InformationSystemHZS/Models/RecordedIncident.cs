@@ -9,7 +9,7 @@ public class RecordedIncident(
     string incidentStartTIme,
     string assignedStation,
     string assignedUnit,
-    bool resolved = false
+    bool resolved
 )
 {
     public IncidentCharacteristics Characteristics { get; set; } = characteristics;

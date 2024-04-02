@@ -9,6 +9,7 @@ public static class CommandFactory
             { "list-stations", _ => new ListStationsCommand() },
             { "list-units", _ => new ListUnitsCommand() },
             { "list-incidents", _ => new ListIncidentsCommand() },
+            { "statistics", _ => new StatisticsCommand() },
             { "add-member", arguments => new AddMemberCommand(arguments) },
             { "remove-member", arguments => new RemoveMemberCommand(arguments) },
             { "reassign-member", arguments => new ReassignMemberCommand(arguments) },

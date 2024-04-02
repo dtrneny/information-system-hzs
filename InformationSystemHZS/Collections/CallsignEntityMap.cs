@@ -130,9 +130,4 @@ public partial class CallsignEntityMap<T> where T : IBaseModel
 
         return num;
     }
-    
-    public bool ContainsCallsign(string callsign)
-    {
-        return _data.ContainsKey(callsign);
-    }
 }

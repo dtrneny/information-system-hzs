@@ -53,7 +53,7 @@ public class OutputWriter
     
     public void PrintSuccessfulUnitStationReassign(Unit unit)
     {
-        _consoleManager.WriteLine($"[processed]: Unit {unit.Callsign} was reassigned to the new station with callsign {unit.StationCallsign}.");
+        _consoleManager.WriteLine($"[processed]: The unit was reassigned under the new callsign {unit.Callsign}");
     }
 
     public void PrintInvalidArgumentsMessage()
@@ -96,14 +96,49 @@ public class OutputWriter
         _consoleManager.WriteLine("[capacity]: All units are currently busy. Try again later.");
     }
     
-    public void PrintSuccessfulIncidentAddition()
+    public void PrintSuccessfulIncidentAddition(RecordedIncident incident)
     {
-        // TODO: [processed]: Unit J02 from station S02 was assigned to the incident.
-        _consoleManager.WriteLine("[processed]: new incident.");
+        _consoleManager.WriteLine($"[processed]: Unit {incident.AssignedUnit} from station {incident.AssignedStation} was assigned to the incident.");
     }
 
     public void PrintBaseExceptionMessage(string message)
     {
         _consoleManager.WriteLine(message);
     }
+    
+    public void PrintStatisticsWaterTanksCount(int count)
+    {
+        _consoleManager.WriteLine($"Total number of water tanks: {count}");
+    }
+    
+    public void PrintStatisticsClosestStationToHospital(string stationName)
+    {
+        _consoleManager.WriteLine($"The closest station to the hospital: {stationName}");
+    }
+    
+    public void PrintStatisticsFastestUnit(string unitCallsign)
+    {
+        _consoleManager.WriteLine($"Fastest unit: {unitCallsign}");
+    }
+    
+    public void PrintStatisticsStationWithMostMembers(string stationCallsign)
+    {
+        _consoleManager.WriteLine($"Station with the most firefighters: {stationCallsign}");
+    }
+    
+    public void PrintStatisticsVehiclesByConsumption(List<string> orderedVehicleNames)
+    {
+        _consoleManager.WriteLine($"Vehicles by fuel consumption: {string.Join(", ", orderedVehicleNames)}");
+    }
+    
+    public void PrintStatisticsBusiestUnit(string unitCallsign)
+    {
+        _consoleManager.WriteLine($"Busiest unit: {unitCallsign}");
+    }
+    
+    public void PrintStatisticsMostFuelConsumed(string unitCallsign)
+    {
+        _consoleManager.WriteLine($"Most fuel consumed: {unitCallsign}");
+    }
+
 }

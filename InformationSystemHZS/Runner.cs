@@ -12,7 +12,9 @@ namespace InformationSystemHZS;
 public class Runner
 {
     private static Timer? _updateTimer;
-
+    private static ScenarioObject? Scenario { get; set; }
+    
+    
     public static Task Main(IConsoleManager consoleManager, string entryFileName = "Brnoslava.json")
     {
         // ---- DO NOT TOUCH ----
@@ -25,7 +27,6 @@ public class Runner
         // TODO: Catch exception here in case the loading failed, write an error message containing "import" and return "Task.CompletedTask" 
         // TODO: After we obtain valid data from ScenarioLoader, it is necessary to instantiate your own objects here.
         // TODO: We also need to check that given data is in a valid form (unique IDs, valid no. of firefighters, valid vehicle type).
-        ScenarioObject scenario;
 
         try
         {
@@ -36,14 +37,14 @@ public class Runner
                 throw new NullScenarioDataException();
             }
             
-            scenario = DtoMapper.MapScenarionObjectDtoToScenarioObject(data);
+            Scenario = DtoMapper.MapScenarionObjectDtoToScenarioObject(data);
             
-            if (scenario == null)
+            if (Scenario == null)
             {
                 throw new NullScenarioObjectException();
             }
             
-            ScenarioValidation.ValidateScenarioObject(scenario);
+            ScenarioValidation.ValidateScenarioObject(Scenario);
         }
         catch (BaseException e)
         {
@@ -56,7 +57,7 @@ public class Runner
             return Task.CompletedTask;
         }
         
-        var context = new SystemContext(outputWriter, scenario);
+        var context = new SystemContext(outputWriter, Scenario);
         commandParser.CommandGiven += Logger.OnInputGiven;
         
         while (true)
@@ -83,7 +84,6 @@ public class Runner
     /// </summary>
     private static void UpdateFunction()
     {
-        // TODO: Implement updates of state in real time (every second)
-        throw new NotImplementedException();
+        Scenario?.Update();
     }
 }

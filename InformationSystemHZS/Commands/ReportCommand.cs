@@ -50,25 +50,29 @@ public class ReportCommand(List<string> arguments): ICommand
         var location = new Position(xCoordinate.Value, yCoordinate.Value);
         var incidentCharacteristics = new IncidentCharacteristics(incidentType.Value);
         var currentTime = DateTime.Now;
+
+        var suitableUnit = context.ScenarioObject.GetSuitableUnitForIncident(
+            incidentCharacteristics,
+            location
+        );
         
-        // TODO:
+        if (suitableUnit == null)
+        {
+            context.OutputWriter.PrintFailureIncidentAddition();
+            return;
+        }
+        
         var newIncident = new RecordedIncident(
             incidentCharacteristics,
             location,
             description,
             currentTime.ToString("dd.MM.yyyy HH:mm:ss"),
-            "null",
-            "null"
+            suitableUnit.StationCallsign,
+            suitableUnit.Callsign,
+            false
         );
-
-        var gogogo = true;
-
-        if (!gogogo)
-        {
-            context.OutputWriter.PrintFailureIncidentAddition();
-        }
         
         context.ScenarioObject.IncidentsHistory.Add(newIncident);
-        context.OutputWriter.PrintSuccessfulIncidentAddition();
+        context.OutputWriter.PrintSuccessfulIncidentAddition(newIncident);
     }
 }
