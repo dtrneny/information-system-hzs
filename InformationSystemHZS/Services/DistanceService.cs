@@ -1,3 +1,5 @@
+using InformationSystemHZS.Models;
+
 namespace InformationSystemHZS.Services;
 
 public static class DistanceService
@@ -10,6 +12,14 @@ public static class DistanceService
     {
         var deltaX = secondX - firstX;
         var deltaY = secondY - firstY;
+
+        return Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+    }
+    
+    public static double CalculateDistance(Position first, Position second)
+    {
+        var deltaX = second.X - first.X;
+        var deltaY = second.Y - first.Y;
 
         return Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
     }

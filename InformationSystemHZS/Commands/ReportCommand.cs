@@ -1,5 +1,6 @@
 using InformationSystemHZS.Classes;
 using InformationSystemHZS.Models;
+using InformationSystemHZS.Services;
 using InformationSystemHZS.Utils;
 using InformationSystemHZS.Utils.Enums;
 
@@ -61,6 +62,14 @@ public class ReportCommand(List<string> arguments): ICommand
             context.OutputWriter.PrintFailureIncidentAddition();
             return;
         }
+
+        var station = context.ScenarioObject.Stations.GetEntity(suitableUnit.StationCallsign);
+        
+        if (station == null)
+        {
+            context.OutputWriter.PrintFailureIncidentAddition();
+            return;
+        }
         
         var newIncident = new RecordedIncident(
             incidentCharacteristics,
@@ -71,6 +80,18 @@ public class ReportCommand(List<string> arguments): ICommand
             suitableUnit.Callsign,
             false
         );
+
+        var routeTime = DistanceService.CalculateTimeTaken(
+            DistanceService.CalculateDistance(station.Position, newIncident.Location),
+            suitableUnit.Vehicle.Speed
+        );
+
+        suitableUnit.ActiveIncident = new ActiveIncidentCharacteristics(
+            newIncident.IncidentStartTIme,
+            newIncident.Characteristics.SolutionTime,
+            routeTime
+        );
+        suitableUnit.State = UnitState.EN_ROUTE;
         
         context.ScenarioObject.IncidentsHistory.Add(newIncident);
         context.OutputWriter.PrintSuccessfulIncidentAddition(newIncident);

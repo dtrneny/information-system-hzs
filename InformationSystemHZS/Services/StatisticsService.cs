@@ -107,11 +107,9 @@ public static class StatisticsService
                 tuple.Unit.Callsign,
                 tuple.Unit.StationCallsign,
                 FuelConsumed = DistanceService.CalculateFuelConsumed(
-                    DistanceService.CalculateDistance(
-                        tuple.UnitPosition.X,
-                        tuple.UnitPosition.Y,
-                        tuple.Incident.Location.X,
-                        tuple.Incident.Location.Y
+                    2 * DistanceService.CalculateDistance(
+                        tuple.UnitPosition,
+                        tuple.Incident.Location
                     ),
                     tuple.Unit.Vehicle.FuelConsumption
                 )

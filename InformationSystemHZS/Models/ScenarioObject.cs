@@ -15,7 +15,15 @@ public class ScenarioObject(
 
     public void Update()
     {
-        // Console.WriteLine("Update");
+        var allUnits = Stations
+            .GetAllEntities()
+            .SelectMany(station => station.Units.GetAllEntities())
+            .ToList();
+
+        foreach (var unit in allUnits)
+        {
+            unit.UpdateUnitState();
+        }
     }
 
     public Unit? GetSuitableUnitForIncident(IncidentCharacteristics characteristics, Position location)
@@ -78,10 +86,8 @@ public class ScenarioObject(
             if (station == null) continue;
             
             var distance = DistanceService.CalculateDistance(
-                station.Position.X,
-                station.Position.Y,
-                position.X,
-                position.Y
+                station.Position,
+                position
             );
 
             unitsWithDistance.Add((unit, distance));
