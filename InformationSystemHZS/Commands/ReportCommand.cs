@@ -86,9 +86,8 @@ public class ReportCommand(List<string> arguments): ICommand
             suitableUnit.Vehicle.Speed
         );
 
-        suitableUnit.ActiveIncident = new ActiveIncidentCharacteristics(
-            newIncident.IncidentStartTIme,
-            newIncident.Characteristics.SolutionTime,
+        suitableUnit.ActiveIncidentChar = new ActiveIncidentCharacteristics(
+            newIncident,
             routeTime
         );
         suitableUnit.State = UnitState.EN_ROUTE;

@@ -1,3 +1,4 @@
+using InformationSystemHZS.Classes;
 using InformationSystemHZS.Models;
 
 namespace InformationSystemHZS.Commands;

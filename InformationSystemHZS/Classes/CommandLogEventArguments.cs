@@ -1,4 +1,4 @@
-namespace InformationSystemHZS.Utils;
+namespace InformationSystemHZS.Classes;
 
 public class CommandLogEventArguments(string commandName, List<string> commandArguments): EventArgs
 {

@@ -1,6 +1,5 @@
-using InformationSystemHZS.Exceptions;
+using InformationSystemHZS.Classes;
 using InformationSystemHZS.Models;
-using InformationSystemHZS.Utils.Enums;
 
 namespace InformationSystemHZS.Commands;
 
@@ -42,7 +41,7 @@ public class AddMemberCommand(List<string> arguments): ICommand
             return;
         }
 
-        var newMember = new Member("", unitCallsign, memberName, MemberRank.PRIVATE);
+        var newMember = new Member(unitCallsign, memberName);
         unit.Members.SafelyAddEntity(newMember, null);
         
         context.OutputWriter.PrintSuccessfulMemberAddition(newMember);

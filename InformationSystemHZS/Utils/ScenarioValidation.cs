@@ -7,6 +7,12 @@ namespace InformationSystemHZS.Utils;
 
 public static class ScenarioValidation
 {
+    public static void ValidateScenarioObject(ScenarioObject scenarioObject)
+    {
+        ValidateStations(scenarioObject.Stations);
+        ValidateIncidents(scenarioObject.IncidentsHistory);
+    }
+    
     private static bool ValidateDuplicateIdentifiers(List<string> identifiers)
     {
         return !identifiers
@@ -22,7 +28,7 @@ public static class ScenarioValidation
     private static bool ValidateVehicleType(string vehicleType)
     {
         var type = ValueParser.ParseEnumValueFromString<VehicleType>(vehicleType);
-        return type != null;
+        return type.HasValue;
     }
 
     private static bool ValidateUnitMembersCount(int membersCount)
@@ -102,11 +108,5 @@ public static class ScenarioValidation
                 throw new PositionOutOfBoundsException(incident.Location);
             }
         }
-    }
-
-    public static void ValidateScenarioObject(ScenarioObject scenarioObject)
-    {
-        ValidateStations(scenarioObject.Stations);
-        ValidateIncidents(scenarioObject.IncidentsHistory);
     }
 }

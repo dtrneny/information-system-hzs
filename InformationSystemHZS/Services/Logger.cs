@@ -1,4 +1,4 @@
-using InformationSystemHZS.Utils;
+using InformationSystemHZS.Classes;
 
 namespace InformationSystemHZS.Services;
 

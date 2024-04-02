@@ -9,12 +9,10 @@ namespace InformationSystemHZS.Collections;
 /// <typeparam name="T">IBaseModel</typeparam>
 public partial class CallsignEntityMap<T> where T : IBaseModel
 {
-    // TODO: Implement data storage
     private readonly Dictionary<string, T> _data = new ();
     private char CallsignLetter { get; }
     private Regex CallsignRegex { get; }
 
-    // TODO: Maybe a constructor might come in handy, ey?
     public CallsignEntityMap(char letter)
     {
         CallsignLetter = char.ToUpper(letter);
@@ -27,8 +25,6 @@ public partial class CallsignEntityMap<T> where T : IBaseModel
     /// </summary>
     public T? GetEntity(string callsign)
     {
-        // TODO: Implement
-        // throw new NotImplementedException();
         return _data.TryGetValue(callsign, out var value) ? value : default(T);
     }
 
@@ -37,16 +33,7 @@ public partial class CallsignEntityMap<T> where T : IBaseModel
     /// </summary>
     public List<T> GetAllEntities()
     {
-        // TODO: Implement
-        // throw new NotImplementedException();
         return _data.Values.ToList();
-    }
-
-    public List<T> GetAllEntitiesSorted(bool ascending = true)
-    {
-        return ascending
-            ? _data.Values.OrderBy(item => GetCallsignNumber(item.Callsign)).ToList()
-            : _data.Values.OrderByDescending(item => GetCallsignNumber(item.Callsign)).ToList();
     }
     
     /// <summary>
@@ -54,8 +41,6 @@ public partial class CallsignEntityMap<T> where T : IBaseModel
     /// </summary>
     public int GetEntitiesCount()
     {
-        // TODO: Implement
-        // throw new NotImplementedException();
         return _data.Values.Count;
     }
     
@@ -66,8 +51,6 @@ public partial class CallsignEntityMap<T> where T : IBaseModel
     /// </summary>
     public bool SafelyAddEntity(T entity, string? callsign)
     {
-        // TODO: Implement
-        // throw new NotImplementedException();
         if (callsign != null && (_data.ContainsKey(callsign) || !ValidateCallsign(callsign))) { return false; }
         
         var highestCallsign = GetHighestCallsign();
@@ -96,8 +79,6 @@ public partial class CallsignEntityMap<T> where T : IBaseModel
     /// </summary>
     public bool SafelyRemoveEntity(string callsign)
     {
-        // TODO: Implement
-        // throw new NotImplementedException();
         return _data.Remove(callsign);
     }
     
@@ -110,18 +91,18 @@ public partial class CallsignEntityMap<T> where T : IBaseModel
         return [.._data.Keys];
     }
 
-    public string? GetHighestCallsign()
+    private string? GetHighestCallsign()
     {
         var existingCallsigns = _data.Keys.ToList();
         return existingCallsigns.Count != 0 ? existingCallsigns.OrderByDescending(GetCallsignNumber).First() : null;
     }
 
-    public bool ValidateCallsign(string? callsign)
+    private bool ValidateCallsign(string? callsign)
     {
         return callsign != null && CallsignRegex.IsMatch(callsign);
     }
 
-    public int? GetCallsignNumber(string callsign)
+    private int? GetCallsignNumber(string callsign)
     {
         if (!ValidateCallsign(callsign)) { return null; }
         

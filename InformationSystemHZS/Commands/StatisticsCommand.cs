@@ -1,3 +1,4 @@
+using InformationSystemHZS.Classes;
 using InformationSystemHZS.Models;
 using InformationSystemHZS.Services;
 
@@ -46,11 +47,11 @@ public class StatisticsCommand: ICommand
 
         var incidentsWithPositionedUnits = positionedUnits
             .Join(historicalIncidents,
-                positionedUnit => new { UnitCallsign = positionedUnit.Unit.Callsign, StationCallsign = positionedUnit.Unit.StationCallsign },
+                positionedUnit => new { UnitCallsign = positionedUnit.Unit.Callsign, positionedUnit.Unit.StationCallsign },
                 incident => new { UnitCallsign = incident.AssignedUnit, StationCallsign = incident.AssignedStation },
                 (positionedUnit, incident) => new
                 {
-                    Unit = positionedUnit.Unit,
+                    positionedUnit.Unit,
                     UnitPosition = positionedUnit.Position,
                     Incident = incident
                 }

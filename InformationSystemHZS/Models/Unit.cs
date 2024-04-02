@@ -1,3 +1,4 @@
+using InformationSystemHZS.Classes;
 using InformationSystemHZS.Collections;
 using InformationSystemHZS.Models.Interfaces;
 using InformationSystemHZS.Services;
@@ -5,38 +6,47 @@ using InformationSystemHZS.Utils.Enums;
 
 namespace InformationSystemHZS.Models;
 
-public class Unit(
-    string callsign,
-    string stationCallsign,
-    UnitState state,
-    Vehicle vehicleDto,
-    CallsignEntityMap<Member> members
-): IBaseModel
+public class Unit: IBaseModel
 {
-    public string Callsign { get; set; } = callsign;
-    public string StationCallsign { get; set; } = stationCallsign;
-    public UnitState State { get; set; } = state;
-    public Vehicle Vehicle { get; set; } = vehicleDto;
-    public CallsignEntityMap<Member> Members { get; set; } = members;
-    public ActiveIncidentCharacteristics? ActiveIncident { get; set; }
+    public string Callsign { get; set; }
+    public string StationCallsign { get; set; }
+    public UnitState State { get; set; }
+    public Vehicle Vehicle { get; set; }
+    public CallsignEntityMap<Member> Members { get; set; }
+    public ActiveIncidentCharacteristics? ActiveIncidentChar { get; set; }
+
+    public Unit(
+        string callsign,
+        string stationCallsign,
+        UnitState state,
+        Vehicle vehicle,
+        CallsignEntityMap<Member> members
+    )
+    {
+        Callsign = callsign;
+        StationCallsign = stationCallsign;
+        State = state;
+        Vehicle = vehicle;
+        Members = members;
+    }
     
     public override string ToString()
     {
-        return $"{StationCallsign} | {Callsign} | {Vehicle.Name} | {Members.GetEntitiesCount()}/{Vehicle.Capacity} | {State}{(ActiveIncident != null ? $" | {ActiveIncident.IncidentDuration.Minutes:00}:{ActiveIncident.IncidentDuration.Seconds:00}" : "")}";
+        return $"{StationCallsign} | {Callsign} | {Vehicle.Name} | {Members.GetEntitiesCount()}/{Vehicle.Capacity} | {State}{(ActiveIncidentChar != null ? $" | {ActiveIncidentChar.IncidentDuration.Minutes:00}:{ActiveIncidentChar.IncidentDuration.Seconds:00}" : "")}";
     }
 
     public void UpdateUnitState()
     {
-        if (ActiveIncident == null) { return; }
+        if (ActiveIncidentChar == null) { return; }
         
-        var duration = TimestampService.GetDifferenceBetweenTwoTimestamps(
-            ActiveIncident.StartTime,
-            TimestampService.GetCurrentTimestamp()
+        var duration = DateTimeService.GetTimeSpanGetBetweenTimestamps(
+            ActiveIncidentChar.Incident.IncidentStartTIme,
+            DateTimeService.GetCurrentTimestamp()
         );
         
         if (!duration.HasValue) { return; }
 
-        var newState = GetUnitStateBasedOnDuration(ActiveIncident, duration.Value);
+        var newState = GetUnitStateBasedOnDuration(ActiveIncidentChar, duration.Value);
 
         if (!newState.HasValue) { return; }
         
@@ -44,38 +54,40 @@ public class Unit(
 
         if (newState.Value != UnitState.AVAILABLE)
         {
-            ActiveIncident.IncidentDuration = duration.Value;
+            ActiveIncidentChar.IncidentDuration = duration.Value;
             return;            
         }
 
-        ActiveIncident = null;
+        ActiveIncidentChar.Incident.Resolved = true;
+        ActiveIncidentChar = null;
     }
 
-    public UnitState? GetUnitStateBasedOnDuration(ActiveIncidentCharacteristics characteristics, TimeSpan duration)
+    private UnitState? GetUnitStateBasedOnDuration(ActiveIncidentCharacteristics characteristics, TimeSpan duration)
     {
-        var startTime = TimestampService.ParseTimestampFromString(characteristics.StartTime);
+        var startTime = DateTimeService.ParseDateTimeFromString(characteristics.Incident.IncidentStartTIme);
 
         if (!startTime.HasValue) { return null; }
 
         var arrivalTime = (startTime.Value - startTime.Value.AddSeconds(characteristics.RouteTime)).Duration();
-        var resolvedTime = arrivalTime.Add(TimeSpan.FromSeconds(characteristics.SolutionTime));
+        var resolvedTime = arrivalTime.Add(TimeSpan.FromSeconds(characteristics.Incident.Characteristics.SolutionTime));
         var returnedTime = resolvedTime.Add(TimeSpan.FromSeconds(characteristics.RouteTime));
 
         if (duration < arrivalTime)
         {
             return UnitState.EN_ROUTE;
         }
-        else if (duration < resolvedTime)
+
+        if (duration < resolvedTime)
         {
             return UnitState.ON_SITE;
         }
-        else if (duration < returnedTime)
+
+        if (duration < returnedTime)
         {
             return UnitState.RETURNING;
         }
-        else
-        {
-            return UnitState.AVAILABLE;
-        }
+
+        return UnitState.AVAILABLE;
     }
+
 }

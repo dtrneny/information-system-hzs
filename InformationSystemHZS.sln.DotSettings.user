@@ -1,11 +1,9 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b977c1f5_002Dad51_002D461b_002D8a20_002D3b2164d26250/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;HomeworkTests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b977c1f5_002Dad51_002D461b_002D8a20_002D3b2164d26250/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;HomeworkTests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::D190D42A-3A2A-422B-9917-F75A7B9FEC62::net8.0::HomeworkTests.Tests.ListingStateTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f3a282cb_002Db2c6_002D4811_002D8ec2_002D68ee14bf6d33/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="InitialUnitsListing" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::D190D42A-3A2A-422B-9917-F75A7B9FEC62::net8.0::HomeworkTests.Tests.ListingStateTests.InitialUnitsListing&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f3a282cb_002Db2c6_002D4811_002D8ec2_002D68ee14bf6d33/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="InitialUnitsListing" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;ProjectFile&gt;D190D42A-3A2A-422B-9917-F75A7B9FEC62/d:Tests/f:ListingStateTests.cs&lt;/ProjectFile&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

@@ -1,8 +1,8 @@
+using InformationSystemHZS.Classes;
 using InformationSystemHZS.Exceptions;
 using InformationSystemHZS.IO;
 using InformationSystemHZS.IO.Helpers.Interfaces;
 using InformationSystemHZS.Models;
-using InformationSystemHZS.Models.HelperModels;
 using InformationSystemHZS.Services;
 using InformationSystemHZS.Utils;
 using Timer = System.Timers.Timer;
@@ -14,7 +14,6 @@ public class Runner
     private static Timer? _updateTimer;
     private static ScenarioObject? Scenario { get; set; }
     
-    
     public static Task Main(IConsoleManager consoleManager, string entryFileName = "Brnoslava.json")
     {
         // ---- DO NOT TOUCH ----
@@ -22,11 +21,6 @@ public class Runner
         var outputWriter = new OutputWriter(consoleManager);
         StartUpdateFunction();
         // ^^^^^ DO NOT TOUCH ^^^^^
-
-        // Load initial data from JSON
-        // TODO: Catch exception here in case the loading failed, write an error message containing "import" and return "Task.CompletedTask" 
-        // TODO: After we obtain valid data from ScenarioLoader, it is necessary to instantiate your own objects here.
-        // TODO: We also need to check that given data is in a valid form (unique IDs, valid no. of firefighters, valid vehicle type).
 
         try
         {
@@ -37,7 +31,7 @@ public class Runner
                 throw new NullScenarioDataException();
             }
             
-            Scenario = DtoMapper.MapScenarionObjectDtoToScenarioObject(data);
+            Scenario = DtoMapper.MapScenarioObjectDtoToScenarioObject(data);
             
             if (Scenario == null)
             {

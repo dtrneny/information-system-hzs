@@ -1,3 +1,4 @@
+using InformationSystemHZS.Classes;
 using InformationSystemHZS.Models;
 
 namespace InformationSystemHZS.Commands;
@@ -11,6 +12,7 @@ public class ListIncidentsCommand: ICommand
             .Where(incident => !incident.Resolved) 
             .OrderBy(incident => incident.IncidentStartTIme)
             .ToList();
+        
         context.OutputWriter.PrintIncidentList(incidents);
     }
 }

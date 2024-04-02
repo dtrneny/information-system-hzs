@@ -14,13 +14,13 @@ public static class DtoMapper
         
         var memberRank = ValueParser.ParseEnumValueFromString<MemberRank>(dto.Rank);
 
-        if (memberRank == null) { throw new NullEnumMappingException(dto.Rank); }
+        if (!memberRank.HasValue) { throw new NullEnumMappingException(dto.Rank); }
         
         return new Member(
             dto.Callsign,
             dto.UnitCallsign,
             dto.Name,
-            (MemberRank) memberRank
+            memberRank.Value
         );
     }
     
@@ -33,9 +33,9 @@ public static class DtoMapper
     {
         var incidentType = ValueParser.ParseEnumValueFromString<IncidentType>(dto.Type);
 
-        if (incidentType == null) { throw new NullEnumMappingException(dto.Type); }
+        if (!incidentType.HasValue) { throw new NullEnumMappingException(dto.Type); }
         
-        var incidentCharacteristics = new IncidentCharacteristics((IncidentType) incidentType);
+        var incidentCharacteristics = new IncidentCharacteristics(incidentType.Value);
         
         return new RecordedIncident(
             incidentCharacteristics,
@@ -52,9 +52,9 @@ public static class DtoMapper
     {
         var vehicleType = ValueParser.ParseEnumValueFromString<VehicleType>(dto.Type);
 
-        if (vehicleType == null) { throw new NullEnumMappingException(dto.Type); }
+        if (!vehicleType.HasValue) { throw new NullEnumMappingException(dto.Type); }
         
-        var vehicleCharacteristics = new VehicleCharacteristics((VehicleType) vehicleType);
+        var vehicleCharacteristics = new VehicleCharacteristics(vehicleType.Value);
         
         return new Vehicle(
             dto.Name,
@@ -100,7 +100,7 @@ public static class DtoMapper
         );
     } 
     
-    public static ScenarioObject MapScenarionObjectDtoToScenarioObject(ScenarioObjectDto dto)
+    public static ScenarioObject MapScenarioObjectDtoToScenarioObject(ScenarioObjectDto dto)
     {
         var recordedIncidents = dto.IncidentsHistory.Select(MapRecordedIncidentDtoToRecordedIncident).ToList();
         var stations = new CallsignEntityMap<Station>('S');

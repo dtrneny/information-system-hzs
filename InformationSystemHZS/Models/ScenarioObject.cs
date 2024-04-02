@@ -71,7 +71,7 @@ public class ScenarioObject(
             .First();
     }
 
-    public List<(Unit unit, double distance)> GetUnitsWithDistance(Position position)
+    private List<(Unit unit, double distance)> GetUnitsWithDistance(Position position)
     {
         List<(Unit unit, double distance)> unitsWithDistance = [];
         var units = Stations
